@@ -9,9 +9,17 @@ async function findAndCount(where, order, limit, offset) {
     return BoardGame.findAndCountAll({ where, order, limit, offset });
 }
 
-async function findAll(where, order) {
-    // used by CSV export
-    return BoardGame.findAll({ where, order });
+async function findAll(where, order, limit, offset) {
+    return BoardGame.findAll({ where, order, limit, offset });
+}
+
+async function findRandom(where, limit = 20) {
+    const order = BoardGame.sequelize.random(); // RANDOM()/RAND()
+    return BoardGame.findAll({ where, order, limit });
+}
+
+async function count(where) {
+    return BoardGame.count({ where });
 }
 
 async function findById(id) {
@@ -22,5 +30,7 @@ module.exports = {
     create,
     findAndCount,
     findAll,
+    findRandom,
+    count,
     findById,
 };
