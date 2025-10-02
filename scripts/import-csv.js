@@ -30,14 +30,13 @@ function toDec(v) {
     const s = String(v).trim().replace(',', '.');
     if (s === '' || s.toLowerCase() === 'null' || s === '-') return null;
     const n = Number(s);
-    return Number.isFinite(n) ? s : null; // keep as string; DECIMAL will cast
+    return Number.isFinite(n) ? s : null; 
 }
 function toUrlOrNull(v) {
     const s = (v ?? '').trim();
     return s === '' ? null : s;
 }
 function normalizeRange(minVal, maxVal) {
-    // If only one side present, mirror it. If both and min>max, swap.
     if (minVal == null && maxVal == null) return [null, null];
     if (minVal == null) minVal = maxVal;
     if (maxVal == null) maxVal = minVal;
@@ -73,13 +72,11 @@ function normalizeRange(minVal, maxVal) {
         for (let i = 0; i < rows.length; i++) {
             const r = rows[i];
 
-            // Map CSV headers (edit these keys if your header names differ)
             let playersMin = toNonNegIntOrNull(r.players_min);
             let playersMax = toNonNegIntOrNull(r.players_max);
             let timeMin = toNonNegIntOrNull(r.time_min);
             let timeMax = toNonNegIntOrNull(r.time_max);
 
-            // auto-fix ranges
             const [pmin, pmax] = normalizeRange(playersMin, playersMax);
             const [tmin, tmax] = normalizeRange(timeMin, timeMax);
             if (pmin !== playersMin || pmax !== playersMax || tmin !== timeMin || tmax !== timeMax) fixed++;
@@ -114,7 +111,6 @@ function normalizeRange(minVal, maxVal) {
                 alternateNames: splitToArray(r.alternate_names),
             };
 
-            // minimal sanity: name required by model
             if (!record.name) { skipped++; continue; }
 
             payload.push(record);
@@ -135,7 +131,6 @@ function normalizeRange(minVal, maxVal) {
         console.log('Import completed.');
         process.exit(0);
     } catch (err) {
-        // If AggregateError, surface first few inner messages for easier debugging
         if (err && Array.isArray(err.errors)) {
             console.error('Import failed with validation errors:');
             for (let i = 0; i < Math.min(10, err.errors.length); i++) {

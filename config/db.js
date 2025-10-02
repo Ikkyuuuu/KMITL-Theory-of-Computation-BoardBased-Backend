@@ -11,15 +11,10 @@ function resolveMaybe(p) {
 }
 
 const {
-  // Choose DB via env:
-  // USE_SQLITE=true → SQLite (local file)
-  // Otherwise Postgres if DB_URL or PGHOST is set
   USE_SQLITE,
 
-  // SQLite
   SQLITE_PATH = './dev.sqlite3',
 
-  // Postgres (either DB_URL or individual params)
   DB_URL,
   PGHOST,
   PGPORT,
@@ -27,11 +22,9 @@ const {
   PGUSER,
   PGPASSWORD,
 
-  // SSL for Postgres
-  PGSSLMODE,        // "require" to enable SSL
-  PGSSLROOTCERT,    // path like "./ca.pem"
+  PGSSLMODE,      
+  PGSSLROOTCERT,   
 
-  // Pool (optional)
   POOL_MIN = '0',
   POOL_MAX = '10',
   POOL_IDLE_MS = '10000',
@@ -40,12 +33,11 @@ const {
 
 const useSQLite =
   String(USE_SQLITE || '').toLowerCase() === 'true' ||
-  (!DB_URL && !PGHOST); // default to SQLite when PG not configured
+  (!DB_URL && !PGHOST); 
 
 let sequelize;
 
 if (useSQLite) {
-  // ---------- SQLite ----------
   sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: SQLITE_PATH,
@@ -59,7 +51,6 @@ if (useSQLite) {
   });
   console.log(`[db] Using SQLite at ${SQLITE_PATH}`);
 } else {
-  // ---------- Postgres ----------
   const wantSSL = (PGSSLMODE || '').toLowerCase() === 'require';
   const caPath = resolveMaybe(PGSSLROOTCERT);
 
@@ -106,7 +97,6 @@ if (useSQLite) {
   console.log('[db] Using Postgres');
 }
 
-// Optional quick self-test
 (async () => {
   try {
     await sequelize.authenticate();
