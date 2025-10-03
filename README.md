@@ -24,12 +24,12 @@ GET {{url}}/board-games/
 GET {{url}}/board-games?pageSize=50
 ```
 
-### Get item by id
+### Get item by id (specific id)
 ```bash
 GET {{url}}/board-games/1
 ```
 
-### Get item by range (specific range)
+### Get item by id (specific range)
 ```bash
 GET {{url}}/board-games?range=1-20
 ```
@@ -44,9 +44,9 @@ GET {{url}}/board-games?q=Coup
 GET {{url}}/board-games?sort=id:asc
 ```
 
-### Filter catagory
+### Filter catagory (case-insensitive)
 ```bash
-GET {{url}}/board-games?categories=Dice
+GET {{url}}/board-games?sort=id:asc&categories=Action%20/%20Dexterity&q=coup
 ```
 
 ### Combine multiple filter
