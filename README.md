@@ -29,7 +29,7 @@ GET {{url}}/board-games?pageSize=50
 GET {{url}}/board-games/1
 ```
 
-### Get item by id (specific range)
+### Get item by range (specific range)
 ```bash
 GET {{url}}/board-games?range=1-20
 ```
