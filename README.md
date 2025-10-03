@@ -7,7 +7,7 @@ npm install
 npm run start
 ```
 
-## GET Method
+## HTTP Request Method
 ### Import CSV
 ```bash
 GET {{url}}/board-games/export.csv
