@@ -46,12 +46,12 @@ GET {{url}}/board-games?sort=id:asc
 
 ### Filter catagory (case-insensitive)
 ```bash
-GET {{url}}/board-games?sort=id:asc&categories=Action%20/%20Dexterity&q=coup
+GET {{url}}/board-games?categories=Action%20/%20Dexterity
 ```
 
 ### Combine multiple filter
 ```bash
-GET {{url}}/board-games?q=The&sort=id:asc&pageSize=5&categories=Dice
+GET {{url}}/board-games?sort=id:asc&categories=Action%20/%20Dexterity&q=coup
 ```
 
 
