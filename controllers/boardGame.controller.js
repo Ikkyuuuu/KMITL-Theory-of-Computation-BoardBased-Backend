@@ -101,15 +101,50 @@ exports.remove = asyncHandler(async (req, res) => {
 exports.exportCsv = asyncHandler(async (req, res) => {
     const where = buildWhere(req.query);
     const order = parseSort(req.query.sort, [['id', 'ASC']]);
+
+    // fetch all rows (no attribute restriction)
     const rows = await svc.findAll(where, order);
 
-    const columns = [
-        'id', 'name', 'category', 'average_rating',
-        'min_players', 'max_players', 'min_playtime', 'max_playtime', 'year_published'
-    ];
+    // get plain JS objects
+    const plain = rows.map(r => (typeof r.get === 'function' ? r.get({ plain: true }) : r));
 
-    const csv = rowsToCsv(rows.map(r => r.toJSON()), columns);
+    // If caller provides ?columns=id,name,... use that
+    let columns;
+    if (req.query.columns) {
+        columns = String(req.query.columns)
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+    } else {
+        // Build a preferred order first, then append any remaining keys we find
+        const preferred = [
+            'id', 'name', 'category',
+            'averageRating', 'average_rating',
+            'playersMin', 'min_players', 'playersMax', 'max_players',
+            'timeMin', 'min_playtime', 'timeMax', 'max_playtime',
+            'agePlus', 'yearPublished', 'year_published',
+            'weight5',
+            'description',
+            'url',
+            'imageUrl', 'primaryImage', 'ogImage',
+            'galleryImages', 'designers', 'artists', 'publishers',
+            'createdAt', 'updatedAt'
+        ];
+
+        const keySet = new Set();
+        for (const obj of plain) {
+            Object.keys(obj).forEach(k => keySet.add(k));
+        }
+
+        // start with preferred keys that exist
+        columns = preferred.filter(k => keySet.has(k));
+        // then append any remaining keys we discovered
+        for (const k of keySet) if (!columns.includes(k)) columns.push(k);
+    }
+
+    const csv = rowsToCsv(plain, columns);
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="board-games.csv"');
     res.send(csv);
 });
+
