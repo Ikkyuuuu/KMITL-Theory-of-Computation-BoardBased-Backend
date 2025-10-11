@@ -7,6 +7,25 @@ npm install
 npm run start
 ```
 
+## Local Environment
+```bash
+# Server 
+PORT=3000
+NODE_ENV=development
+
+# PostgreSQL (Aiven) 
+PGHOST=pg-xxxxxxxx-yourproject-xxx.aivencloud.com
+PGPORT=26941
+PGDATABASE=defaultdb
+PGUSER=avnadmin
+PGPASSWORD=__REPLACE_WITH_YOUR_PASSWORD__
+
+# SSL 
+PGSSLMODE=require
+PGSSLROOTCERT=./ca.pem
+
+```
+
 ## HTTP Request Method
 
 ### Import CSV
